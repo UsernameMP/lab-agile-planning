@@ -1,0 +1,36 @@
+name: Publish IT tax calculator
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'it-tax-economics/**'
+      - '.github/workflows/publish-it-calculator.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "it-calculator-pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Upload only calculator directory
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: 'it-tax-economics'
+      - name: Deploy calculator
+        id: deployment
+        uses: actions/deploy-pages@v4
