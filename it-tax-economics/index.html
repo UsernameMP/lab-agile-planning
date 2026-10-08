@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="description" content="Интерактивная модель дополнительной экономии налога на прибыль IT-компании при резидентстве в ОЭЗ «Иннополис»">
+<title>Экономика резидентства — IT × Иннополис</title>
+<style>
+:root{--ink:#17243a;--muted:#667489;--line:#dae4e9;--bg:#f4f7f8;--paper:#fff;--green:#007e64;--mint:#e9f6f0;--red:#b34242;--blue:#3764aa;--shadow:0 14px 45px rgba(15,36,50,.065)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-variant-numeric:tabular-nums}
+button,input{font:inherit}button{cursor:pointer}.shell{max-width:1190px;margin:0 auto;padding:34px 22px 55px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:30px}
+.brand{display:flex;align-items:center;gap:12px;font-size:12px;letter-spacing:.15em;font-weight:800;color:#185848;text-transform:uppercase}
+.logo{display:grid;place-items:center;width:33px;height:33px;background:#086b57;border-radius:10px;color:white;font-size:19px;letter-spacing:0}
+.tag{border:1px solid #c9d9d5;padding:8px 12px;border-radius:99px;font-size:12px;color:#496b63;background:#fff}
+.hero{display:flex;justify-content:space-between;align-items:flex-end;gap:22px;margin-bottom:26px}
+.overline{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--green);margin-bottom:11px}
+h1{font-size:clamp(31px,4vw,52px);letter-spacing:-.04em;line-height:1.07;margin:0;max-width:760px;font-weight:800}
+.subtitle{font-size:16px;line-height:1.55;color:var(--muted);max-width:710px;margin:15px 0 0}
+.buttons{display:flex;gap:9px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.btn{border:1px solid #bfcfcb;background:white;border-radius:11px;padding:11px 14px;color:#235648;font-size:13px;font-weight:650}
+.btn:hover{background:#eaf5f0}.btn.primary{background:#08785d;border-color:#08785d;color:white}.btn.primary:hover{background:#07674f}
+.layout{display:grid;grid-template-columns:365px minmax(0,1fr);gap:18px;align-items:start}
+.panel{border:1px solid var(--line);background:var(--paper);border-radius:19px;box-shadow:var(--shadow)}
+.controls{padding:24px;position:sticky;top:16px}
+.hd{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:20px}
+.hd h2{font-size:17px;letter-spacing:-.025em;margin:0}.small{font-size:12px;color:var(--muted)}
+.presets{display:flex;flex-wrap:wrap;gap:7px;margin:4px 0 22px}
+.preset{border:1px solid #d4dfdf;border-radius:10px;background:white;padding:8px 10px;font-size:12px;font-weight:700;color:#4b606a}
+.preset.active{background:var(--mint);color:#00644c;border-color:#94c8b5}
+.field{margin:0 0 21px}.fieldtop{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:9px}
+.field label{font-size:13px;font-weight:700;line-height:1.35;padding-top:5px}.fieldunit{font-size:11px;color:var(--muted);font-weight:400}
+.numwrap{display:flex;align-items:center;background:#f4f7f7;border:1px solid #dae4e5;border-radius:10px;flex-shrink:0;overflow:hidden}
+.numwrap input{width:83px;text-align:right;border:none;background:transparent;padding:7px 6px;color:#123e33;font-weight:750;outline:none;min-width:0}
+.numwrap input:focus-visible{outline:2px solid #0e826a;outline-offset:-2px}
+.numwrap span{font-size:11px;color:#71818b;padding:0 8px 0 0}
+input[type=range]{width:100%;accent-color:var(--green);cursor:pointer;height:5px}
+.fieldfoot{display:flex;justify-content:space-between;color:#93a0aa;font-size:11px;margin-top:2px}
+.hr{height:1px;background:#e4eaea;margin:23px 0}
+.modes{display:flex;gap:6px;background:#eff3f3;border-radius:11px;padding:4px;margin-top:12px;margin-bottom:20px}
+.modes button{flex:1;border:0;border-radius:8px;padding:10px 5px;background:transparent;color:#516675;font-size:12px;font-weight:700}
+.modes button.active{background:white;color:#066f55;box-shadow:0 1px 5px #213c411b}
+.assumption{font-size:12px;line-height:1.5;color:#8d5740;background:#fff5e8;border:1px solid #f0dfc2;border-radius:10px;padding:11px 12px;margin-bottom:18px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+.metric{padding:20px 19px;min-height:145px}
+.metric.accent{background:#086f57;color:#fff;border-color:#086f57}
+.metric.negative{background:#fff8f7;border-color:#ead5d3}
+.metric-title{font-size:12px;color:var(--muted);line-height:1.45;font-weight:650;min-height:38px}
+.metric.accent .metric-title{color:#c6ede0}
+.metric-value{font-size:clamp(22px,2.55vw,34px);font-weight:800;letter-spacing:-.04em;margin:9px 0 4px;white-space:nowrap}
+.metric.accent .metric-value{color:#fff}.metric.negative .metric-value{color:var(--red)}
+.metric-sub{font-size:11px;color:var(--muted);line-height:1.5}.metric.accent .metric-sub{color:#d5eee4}
+.stats{margin-top:13px;padding:23px 24px}
+.stats h2{font-size:17px;margin:0 0 17px;letter-spacing:-.02em}
+.barline{display:grid;grid-template-columns:195px 1fr 100px;gap:12px;align-items:center;margin:17px 0}
+.barlabel{font-size:13px;color:#46596a}.barrail{height:15px;background:#eaf0f2;border-radius:5px;overflow:hidden}
+.barfill{height:100%;width:0%;background:var(--blue);border-radius:5px;transition:width .18s}
+.barfill.a{background:#6085c6}.barfill.b{background:#087f64}.barfill.c{background:#deaa69}
+.barvalue{text-align:right;font-size:13px;font-weight:800}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:13px}
+.subpanel{padding:22px 24px}
+.subpanel h2{font-size:16px;margin:0 0 8px}
+.bigbreak{font-size:31px;line-height:1.2;font-weight:800;letter-spacing:-.035em;margin:8px 0 5px}
+.explain{font-size:12px;line-height:1.6;color:var(--muted)}
+.takeaway{margin-top:13px;border:1px solid #cbded8;border-radius:17px;background:linear-gradient(120deg,#f1f9f5,#fff);padding:20px 24px}
+.takeaway .title{font-size:12px;color:#087255;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.takeaway p{margin:9px 0 0;font-size:16px;line-height:1.6;font-weight:600}
+.note{margin-top:25px;color:#657489;font-size:12px;line-height:1.65}.note a{color:#08795c}
+footer{border-top:1px solid #dae5e7;margin-top:23px;padding-top:15px;display:flex;justify-content:space-between;gap:12px;font-size:11px;color:#8b99a7}
+@media(max-width:950px){.layout{grid-template-columns:1fr}.controls{position:static}.hero{align-items:flex-start;flex-direction:column}.cards{grid-template-columns:repeat(3,1fr)}.metric-value{font-size:27px}}
+@media(max-width:610px){.shell{padding:20px 12px 30px}.top{margin-bottom:23px}.tag{font-size:10px}.hero{margin-bottom:20px}h1{font-size:31px}.subtitle{font-size:14px}.controls{padding:18px}.cards{grid-template-columns:1fr}.metric{min-height:0;padding:15px}.metric-title{min-height:0}.metric-value{font-size:32px}.barline{grid-template-columns:1fr 74px;gap:7px;margin:16px 0}.barrail{grid-column:1/-1;grid-row:2}.split{grid-template-columns:1fr}.stats,.subpanel,.takeaway{padding:18px}footer{flex-direction:column}}
+@media print{body{background:#fff}.shell{padding:12mm;max-width:100%}.top,.buttons,.controls,.presets{display:none!important}.layout{display:block}.panel{box-shadow:none;break-inside:avoid}.right{width:100%}.note{font-size:10px}h1{font-size:29px}.cards{grid-template-columns:repeat(3,1fr)}.metric-value{font-size:22px}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header class="top"><div class="brand"><div class="logo">I</div> ИННОПОЛИС / ЭКОНОМИКА ПРИВЛЕЧЕНИЯ</div><div class="tag">Модель · 2026</div></header>
+<div class="hero"><div><div class="overline">Интерактивный расчёт</div><h1>Сколько реально даёт резидентство IT-компании?</h1><p class="subtitle">Сравнение налога на прибыль для аккредитованной IT-компании и резидента ОЭЗ «Иннополис». Выгода после затрат на физическое присутствие — в цифрах.</p></div><div class="buttons"><button class="btn" id="reset">Сбросить</button><button class="btn primary" id="print">Печать / PDF</button></div></div>
+<div class="layout">
+<aside class="panel controls">
+<div class="hd"><h2>Параметры компании</h2><span class="small">Изменяются сразу</span></div>
+<div class="field"><div class="fieldtop"><label for="revenue">Годовая выручка</label><div class="numwrap"><input id="revenue" type="number" min="0" max="100000" step="10" value="180" inputmode="decimal"><span>млн ₽</span></div></div><input id="revenue-range" type="range" min="0" max="600" step="10" value="180"><div class="fieldfoot"><span>0</span><span>600 млн ₽</span></div></div>
+<div class="field"><div class="fieldtop"><label for="margin">Рентабельность до налога</label><div class="numwrap"><input id="margin" type="number" min="0" max="100" step="1" value="30"><span>%</span></div></div><input id="margin-range" type="range" min="0" max="60" step="1" value="30"><div class="fieldfoot"><span>0%</span><span>60%</span></div></div>
+<div class="field"><div class="fieldtop"><label for="rent">Офис / коворкинг за год</label><div class="numwrap"><input id="rent" type="number" min="0" max="10000" step=".1" value="1.2"><span>млн ₽</span></div></div><input id="rent-range" type="range" min="0" max="6" step=".1" value="1.2"><div class="fieldfoot"><span>0</span><span>6 млн ₽</span></div></div>
+<div class="field"><div class="fieldtop"><label for="extra">Прочие доп. расходы / год</label><div class="numwrap"><input id="extra" type="number" min="0" max="10000" step=".1" value="0"><span>млн ₽</span></div></div><input id="extra-range" type="range" min="0" max="6" step=".1" value="0"><div class="fieldfoot"><span>0</span><span>6 млн ₽</span></div></div>
+<div class="hr"></div>
+<div class="hd"><h2>Разница налоговых ставок</h2><span class="small">Налог на прибыль</span></div>
+<div class="modes" role="group" aria-label="Сценарий ставки IT-компаний"><button type="button" data-rate="5" class="active">5% · сейчас</button><button type="button" data-rate="10">10% · модель</button><button type="button" data-rate="12">12% · модель</button></div>
+<div id="whatif" class="assumption" hidden>Внимание: повышение IT-ставки до 10% или 12% — гипотетический сценарий, а не действующее законодательство.</div>
+<div class="field"><div class="fieldtop"><label for="it">Аккредитованная IT-компания</label><div class="numwrap"><input id="it" type="number" min="0" max="100" step=".1" value="5"><span>%</span></div></div><input id="it-range" type="range" min="0" max="25" step=".5" value="5"><div class="fieldfoot"><span>0%</span><span>25%</span></div></div>
+<div class="field"><div class="fieldtop"><label for="oez">Резидент ОЭЗ (начальный период)</label><div class="numwrap"><input id="oez" type="number" min="0" max="100" step=".1" value="2"><span>%</span></div></div><input id="oez-range" type="range" min="0" max="25" step=".5" value="2"><div class="fieldfoot"><span>0%</span><span>25%</span></div></div>
+<div class="field"><div class="fieldtop"><label for="target">Целевая чистая выгода за 3 года</label><div class="numwrap"><input id="target" type="number" min="0" max="100000" step=".5" value="3"><span>млн ₽</span></div></div><input id="target-range" type="range" min="0" max="20" step=".5" value="3"><div class="fieldfoot"><span>0</span><span>20 млн ₽</span></div></div>
+<div class="small">Все поля доступны для ручного ввода за пределами диапазона ползунка.</div>
+</aside>
+<main class="right">
+<section class="cards">
+<div class="panel metric"><div class="metric-title">Дополнительная налоговая экономия за год</div><div class="metric-value" id="saving">1,62 млн ₽</div><div class="metric-sub" id="saving-caption">3 п.п. от прибыли</div></div>
+<div class="panel metric"><div class="metric-title">Затраты на присутствие за год</div><div class="metric-value" id="expenses">1,20 млн ₽</div><div class="metric-sub">Офис и дополнительные расходы</div></div>
+<div class="panel metric accent" id="net-card"><div class="metric-title">Чистый эффект за год</div><div class="metric-value" id="net">+0,42 млн ₽</div><div class="metric-sub" id="net-caption">После затрат на присутствие</div></div>
+</section>
+<section class="panel stats"><h2>Из чего складывается результат</h2>
+<div class="barline"><div class="barlabel" id="tax-base-label">Налог IT · 5%</div><div class="barrail"><div class="barfill a" id="bar-base"></div></div><div class="barvalue" id="tax-base">2,70</div></div>
+<div class="barline"><div class="barlabel" id="tax-oez-label">Налог ОЭЗ · 2%</div><div class="barrail"><div class="barfill b" id="bar-oez"></div></div><div class="barvalue" id="tax-oez">1,08</div></div>
+<div class="barline"><div class="barlabel">Стоимость присутствия</div><div class="barrail"><div class="barfill c" id="bar-cost"></div></div><div class="barvalue" id="tax-cost">1,20</div></div>
+<div class="explain" style="margin-top:10px">Все суммы в млн ₽ за год. Экономия = прибыль × разница ставок. Чистый эффект = экономия − расходы на присутствие.</div>
+</section>
+<section class="split">
+<div class="panel subpanel"><h2>Порог окупаемости присутствия</h2><div class="bigbreak" id="breakeven">133,3 млн ₽</div><div class="explain">Выручка, при которой дополнительная экономия ровно покрывает ежегодные расходы, при заданной маржинальности.</div></div>
+<div class="panel subpanel"><h2>Выручка для целевой выгоды</h2><div class="bigbreak" id="target-revenue">244,4 млн ₽</div><div class="explain" id="target-explain">Минимальная выручка для 3 млн ₽ чистой выгоды за три года при неизменных параметрах.</div></div>
+</section>
+<section class="takeaway"><div class="title">Управленческий вывод</div><p id="conclusion">При этих параметрах выгода составляет 420 тыс. ₽ в год: дополнительная льгота почти полностью расходуется на присутствие в ОЭЗ.</p></section>
+<div class="note"><strong>Ограничения модели.</strong> Расчёт иллюстративный, использует одинаковую положительную налогооблагаемую прибыль в обоих сценариях до дополнительных расходов. В реальном проекте расходы на офис могут уменьшать налоговую базу; при разных налоговых базах эффект изменится. Не моделируются НДС, страховые взносы, имущество, инвестиционные обязательства, разовые расходы, ограничения по виду и месту деятельности, доходность капитала и дисконтирование. Для ставки ОЭЗ необходимо соблюдение статуса резидента, раздельного учёта и применимости льготы именно к деятельности в ОЭЗ. Трёхлетний эффект — простая сумма трёх одинаковых лет.</div>
+<div class="note"><strong>Нормативная база (2026).</strong> IT-ставка 5%: <a href="https://www.garant.ru/products/ipo/prime/doc/414532652/" target="_blank" rel="noopener noreferrer">письмо Минфина 14.07.2026</a>; федеральная ставка для резидентов ОЭЗ 2%: <a href="https://base.garant.ru/414448725/" target="_blank" rel="noopener noreferrer">письмо Минфина 24.06.2026</a>; региональная ставка 0% для ОЭЗ «Иннополис» в первые 5 прибыльных лет: <a href="https://www.nalog.gov.ru/rn16/about_fts/docs/16619867/" target="_blank" rel="noopener noreferrer">Закон РТ № 5-ЗРТ</a>. Редакции действующих норм требуют проверки на дату конкретной сделки.</div>
+</main></div>
+<footer><span>Экономика привлечения IT-компаний · аналитический сценарный калькулятор</span><span>Без сбора данных · локальные расчёты в браузере</span></footer>
+</div>
+<script>
+(function(){
+"use strict";
+var ids=["revenue","margin","rent","extra","it","oez","target"];
+var defaults={revenue:180,margin:30,rent:1.2,extra:0,it:5,oez:2,target:3};
+var fmt=new Intl.NumberFormat("ru-RU",{maximumFractionDigits:2});
+var money=new Intl.NumberFormat("ru-RU",{minimumFractionDigits:2,maximumFractionDigits:2});
+var big=new Intl.NumberFormat("ru-RU",{maximumFractionDigits:1});
+function el(id){return document.getElementById(id)}
+function val(k){var n=Number(el(k).value);return Number.isFinite(n)?Math.max(0,n):0}
+function set(k,x){el(k).value=String(x);var slider=el(k+"-range");if(slider)slider.value=String(Math.min(Number(slider.max),Math.max(Number(slider.min),x)))}
+function printNum(id,value,digits){el(id).textContent=(digits===1?big:money).format(value)}
+function activate(){var rate=val("it");document.querySelectorAll("[data-rate]").forEach(function(b){b.classList.toggle("active",Number(b.dataset.rate)===rate)});el("whatif").hidden=rate===5&&val("oez")===2}
+function render(){
+ var revenue=val("revenue"),margin=val("margin"),rent=val("rent"),extra=val("extra"),it=val("it"),oez=val("oez"),target=val("target");
+ var profit=revenue*margin/100,delta=(it-oez)/100,tax1=profit*it/100,tax2=profit*oez/100;
+ var saving=profit*delta,cost=rent+extra,net=saving-cost,three=net*3;
+ var threshold=margin>0&&delta>0?cost/(margin/100*delta):Infinity;
+ var targetRev=margin>0&&delta>0?(cost+target/3)/(margin/100*delta):Infinity;
+ el("saving").textContent=money.format(saving)+" млн ₽";
+ el("saving-caption").textContent=fmt.format(it-oez)+" п.п. от прибыли "+money.format(profit)+" млн ₽";
+ el("expenses").textContent=money.format(cost)+" млн ₽";
+ el("net").textContent=(net>0?"+":"")+money.format(net)+" млн ₽";
+ el("net-caption").textContent="За 3 года: "+(three>0?"+":"")+money.format(three)+" млн ₽";
+ el("net-card").classList.toggle("negative",net<0);
+ el("net-card").classList.toggle("accent",net>=0);
+ el("tax-base-label").textContent="Налог IT · "+fmt.format(it)+"%";
+ el("tax-oez-label").textContent="Налог ОЭЗ · "+fmt.format(oez)+"%";
+ el("tax-base").textContent=money.format(tax1);
+ el("tax-oez").textContent=money.format(tax2);
+ el("tax-cost").textContent=money.format(cost);
+ var scale=Math.max(tax1,tax2,cost,.01);
+ [["bar-base",tax1],["bar-oez",tax2],["bar-cost",cost]].forEach(function(a){el(a[0]).style.width=(100*a[1]/scale).toFixed(2)+"%"});
+ el("breakeven").textContent=Number.isFinite(threshold)?big.format(threshold)+" млн ₽":(cost===0?"0 млн ₽":"Нет окупаемости");
+ el("target-revenue").textContent=Number.isFinite(targetRev)?big.format(targetRev)+" млн ₽":"Недостижимо";
+ el("target-explain").textContent="Выручка для "+fmt.format(target)+" млн ₽ чистой выгоды за 3 года при неизменных параметрах.";
+ var conclusion;
+ if(delta<=0){conclusion="У резидентства нет дополнительного преимущества по ставке налога на прибыль. Расходы на присутствие не компенсируются налоговой экономией."}
+ else if(net<0){conclusion="При выручке "+fmt.format(revenue)+" млн ₽ и рентабельности "+fmt.format(margin)+"% расходы превышают налоговую экономию на "+money.format(-net)+" млн ₽ в год. Только этой льготой присутствие не окупается."}
+ else if(cost>0&&net<cost*.5){conclusion="Из "+money.format(saving)+" млн ₽ дополнительной годовой экономии "+money.format(cost)+" млн ₽ уходит на присутствие. Чистый эффект — лишь "+money.format(net)+" млн ₽ в год."}
+ else{conclusion="Расчётная чистая выгода составляет "+money.format(net)+" млн ₽ за год и "+money.format(three)+" млн ₽ за три одинаковых года. Это эффект только по налогу на прибыль за вычетом заданных затрат."}
+ el("conclusion").textContent=conclusion;
+ activate();
+}
+ids.forEach(function(k){
+ var inp=el(k),slider=el(k+"-range");
+ inp.addEventListener("input",function(){if(slider)slider.value=String(Math.max(Number(slider.min),Math.min(Number(slider.max),val(k))));render()});
+ if(slider)slider.addEventListener("input",function(){inp.value=slider.value;render()});
+});
+document.querySelectorAll("[data-rate]").forEach(function(b){b.addEventListener("click",function(){set("it",Number(b.dataset.rate));render()})});
+el("reset").addEventListener("click",function(){ids.forEach(function(k){set(k,defaults[k])});render()});
+el("print").addEventListener("click",function(){window.print()});
+render();
+})();
+</script>
+</body>
+</html>
