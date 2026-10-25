@@ -75,7 +75,7 @@ footer{color:var(--mut);padding-bottom:26px;font-size:12px}.math{font:12px/1.6 u
 <div class="math">μₐₚₚ(t) = μᵣ(t)/[1 + D·(μᵣ(t) − 1)]</div>
 <div class="math">S₂f ≈ 4πf · (2Nₚ A) · |μ₂|, В/Тл</div>
 <div class="math">N₁Hz = √(Ncore² + Namp²), пТ/√Гц</div>
-<div class="math">σ₂₄h ≈ √(σaging² + σT² + σgain²), нТ</div>
+<div class="math">σzero,24h ≈ √(σaging² + σT²), нТ</div>
 <div class="math">Paxis = Panalog + PADC + Pclock + (Pcopper + Pcore)/ηdriver + Pfeedback</div>
 <p class="caption">Модель μ(H) безгистерезисная; шум Баркгаузена, отжиг и механический стресс нельзя получить из одного выражения μ(H). Поэтому Ncore, остаточный температурный дрейф и старение вводятся как <b>калибруемые исходные гипотезы</b>, а не как «выведенная точность».</p>
 </section></div>
@@ -176,7 +176,8 @@ $('derived').innerHTML=[
 ['Гипотеза шумов сердечника',nf(r.magneticAsd1,2)+' пТ/√Гц'],
 ['Шум входа, приведённый к B',nf(r.electronicAsd1,3)+' пТ/√Гц'],
 ['Старение / остаточная температура',nf(r.aging24,3)+' / '+nf(r.thermal24,3)+' нТ'],
-['Коэффициент обратной связи',nf(r.gain24,3)+' нТ при 50 мкТл'],
+['Дрейф коэффициента (не нуль)',nf(r.gain24,3)+' нТ @50 мкТл'],
+['Полная 24 ч невязка показаний',nf(r.readingDrift24,3)+' нТ @50 мкТл'],
 ['Условный интервал шума',nf(r.asd1*.5,1)+'–'+nf(r.asd1*2,1)+' пТ/√Гц'],
 ['Условный интервал дрейфа',nf(r.drift24*.5,2)+'–'+nf(r.drift24*3,2)+' нТ']
 ].map(([a,b])=>row(a,b)).join('');
@@ -212,7 +213,7 @@ $('paretoSummary').innerHTML=row('Материал оптимизации',M.MAT
 }
 function refresh(reopt){
 values=M.canonical(values);
-for(const d of controls)$('out_'+d[0]).textContent=nf(values[d[0]],d[0]==='driveRatio'||d[0]==='spacingMm'?1:values.material==='co'&&d[0]==='widthMm'?2:0)+' '+d[2];
+for(const d of controls)$('out_'+d[0]).textContent=nf(values[d[0]],d[0]==='driveRatio'||d[0]==='spacingMm'?1:d[0]==='widthMm'?(values.material==='co'?2:1):0)+' '+d[2];
 const r=M.calc(values);
 if(reopt||!search||search.material!==values.material)search=M.explore(values.material,5000,9172026);
 drawHead(values,r);renderDetails(r);renderPareto(r);
