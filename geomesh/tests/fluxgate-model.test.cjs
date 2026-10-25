@@ -86,7 +86,7 @@ test('front-end script has parseable JS, references matching model script and on
  const html=fs.readFileSync(path.resolve(__dirname,'../fluxgate.html'),'utf8');
  assert.match(html,/src="fluxgate-model\.js"/);
  assert.match(html,/одна измерительная ось/);
- const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)];
+ const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)].filter(x=>x[1].trim());
  assert.equal(scripts.length,1);
  for(const block of scripts)new vm.Script(block[1]);
  assert.ok(!html.includes('new THREE'));
