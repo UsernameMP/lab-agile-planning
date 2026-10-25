@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GeoMesh Fluxgate — 3D и Pareto</title>
+<style>
+:root{color-scheme:dark;--bg:#090f19;--panel:#121d2e;--panel2:#17243a;--edge:#304057;--txt:#e8f2ff;--mut:#a4b4c9;--blue:#6db7ff;--cyan:#63e1e9;--gold:#e9bd77;--green:#88dab9}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.5 system-ui,Segoe UI,Arial,sans-serif}a{color:var(--cyan)}header{display:flex;align-items:center;gap:15px;flex-wrap:wrap;padding:19px 24px;border-bottom:1px solid var(--edge);background:#0b1422}h1{margin:0;font-size:23px;letter-spacing:-.5px}nav{display:flex;gap:9px;flex-wrap:wrap;margin-left:auto}nav a{display:inline-block;padding:8px 12px;border:1px solid var(--edge);border-radius:8px;text-decoration:none;color:var(--mut)}nav .active{border-color:var(--cyan);color:var(--cyan)}small,.mut{color:var(--mut)}.tag{font-size:11px;letter-spacing:1.7px;font-weight:800;color:var(--cyan)}main{display:grid;grid-template-columns:minmax(285px,326px) minmax(0,1fr);min-height:calc(100vh - 85px)}aside{padding:17px 19px;border-right:1px solid var(--edge);background:var(--panel);max-height:calc(100vh - 85px);overflow:auto}.content{padding:18px;max-width:1500px;min-width:0}section{background:var(--panel);border:1px solid var(--edge);border-radius:12px;padding:17px;margin-bottom:15px}h2{font-size:17px;margin:0 0 12px}h3{font-size:13px;margin:22px 0 8px;color:var(--cyan)}p{margin:8px 0;color:var(--mut)}.control{display:block;margin:11px 0}.control>div{display:flex;justify-content:space-between;gap:8px;font-size:12px}.control output{font-variant-numeric:tabular-nums;color:#fff;font-weight:700}.control input[type=range]{width:100%;accent-color:var(--cyan)}select{width:100%;background:var(--panel2);color:#fff;border:1px solid var(--edge);border-radius:7px;padding:8px}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.metric{background:var(--panel2);padding:12px;border:1px solid var(--edge);border-radius:10px}.metric b{display:block;font-size:19px;line-height:1.25;margin-top:5px;font-variant-numeric:tabular-nums}.metric small{font-size:11px}.pair{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:14px}.detail{background:var(--panel2);border-radius:8px;padding:12px}.detail div{display:flex;justify-content:space-between;gap:9px;padding:5px 0;border-bottom:1px solid #28364b}.detail div:last-child{border:0}.detail strong{font-variant-numeric:tabular-nums;text-align:right}.notice{background:#2a2930;border-left:3px solid var(--gold);padding:10px 13px;color:#eacda1;font-size:12px;border-radius:4px}.svgview{width:100%;height:355px;display:block;background:radial-gradient(ellipse at 50% 42%,#1c2c42,#0c1726 72%);border-radius:9px;touch-action:none;cursor:grab}.chart{width:100%;height:330px;display:block;background:#101b2c;border-radius:9px}.legend{display:flex;flex-wrap:wrap;gap:13px;margin:8px 0 0;color:var(--mut);font-size:12px}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}button{background:#193450;color:#cceaff;border:1px solid #3e6687;border-radius:7px;padding:9px 11px;font:inherit;cursor:pointer}button:hover{background:#224b70}table{width:100%;border-collapse:collapse;font-size:12px}td,th{border-bottom:1px solid var(--edge);padding:8px;text-align:left;vertical-align:top}th{color:var(--mut)}.sources{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.source{padding:9px;border:1px solid var(--edge);border-radius:7px;background:var(--panel2)}.source b{display:block;font-size:12px}.source small{display:block}.controlsnote{font-size:12px}.foot{margin:12px 0;color:var(--mut);font-size:12px}details summary{cursor:pointer;color:var(--cyan)}code{color:#fff}#paretoSvg circle{cursor:pointer}.noscript{padding:20px}
+@media(max-width:1100px){.grid{grid-template-columns:repeat(2,1fr)}.pair{grid-template-columns:1fr}}
+@media(max-width:720px){main{display:block}aside{max-height:none;border-right:0;border-bottom:1px solid var(--edge)}header{padding:15px}nav{margin-left:0}.content{padding:12px}.sources{grid-template-columns:1fr}.svgview{height:305px}}
+</style></head>
+<body>
+<header><div><div class="tag">GEOMESH / INSTRUMENT DESIGN / 25 OCT 2026</div><h1>GeoMesh Феррозонд</h1><small>Vacquier · 2 сердечника на ось · три измерительные оси · инженерная оценочная модель</small></div>
+<nav><a href="index.html">Модели</a><a href="overhauser.html">GeoMesh Overhauser</a><a class="active" href="fluxgate.html">GeoMesh Феррозонд</a></nav></header>
+<main>
+<aside>
+<div class="notice">Исследовательская модель, не экспериментальная характеристика. Параметры сердечника, шум и дрейф представлены сценарными диапазонами. Все численные результаты требуют калибровки образца.</div>
+<h3>Сердечник и механика</h3>
+<label class="control">Материал <select id="mat"><option value="ni">Ni₈₀Fe₂₀, лента 80/20</option><option value="mo">1J85 / Ni-Fe-Mo, лента</option><option value="co">CoFeSiB, аморфная проволока</option></select></label>
+<div id="sliders"></div>
+<div class="actions"><button id="reset">Базовая конструкция</button><button id="optimize">Новый Pareto (5000)</button></div>
+<h3>Границы интерпретации</h3>
+<p class="controlsnote">Приоритет: осевая чувствительность и повторяемость калибровки, не минимальный пик шума любой ценой. Рабочий режим — магнитная компенсация (closed loop), 2f-демодуляция.</p>
+<p class="controlsnote">Трёхосевой блок — 6 ферромагнитных сердечников, 6 обмоток возбуждения, 3 измерительные и 3 отдельные компенсационные. Два блока GeoMesh — 12 сердечников.</p>
+</aside>
+<div class="content">
+<section><div class="grid">
+<div class="metric"><small>Шум одной оси, 1 Гц</small><b id="noise">—</b><small>пТ/√Гц, оценка</small></div>
+<div class="metric"><small>СКО магнитного направления</small><b id="heading">—</b><small>градусы, с калибровкой</small></div>
+<div class="metric"><small>Погрешность вертикали</small><b id="vertical">—</b><small>нТ, 1σ, ориентир</small></div>
+<div class="metric"><small>Три оси / два блока</small><b id="power">—</b><small>мВт, усреднённая мощность</small></div>
+</div></section>
+<div class="pair">
+<section><h2>3D-конструкция трехосевого блока</h2>
+<svg class="svgview" id="geom3d" viewBox="0 0 680 355" role="img" aria-label="Вращаемый схематичный 3D-вид трех пар сердечников и соленоидов"></svg>
+<div class="legend"><span><span class="dot" style="background:#ebb970"></span>Ферромагнитные сердечники</span><span><span class="dot" style="background:#66c7f8"></span>Pickup-соленоид</span><span><span class="dot" style="background:#d3a5f8"></span>Возбуждение</span><span><span class="dot" style="background:#80d7ae"></span>Компенсация</span></div>
+<p class="controlsnote">Вращение: перетаскивание мышью/пальцем. Схема показывает топологию катушек; это не CAD для проверки пересечений и допусков.</p></section>
+<section><h2>Расчёт выбранной конструкции</h2><div class="detail" id="detail"></div><p class="controlsnote">Электрическая мощность учитывает возбуждение, драйвер и условный расход аналогового тракта; не включает ESP32, АЦП, запись, преобразователи и потери аккумулятора.</p><h3>Оценка направлений</h3><div class="detail" id="angles"></div></section>
+</div>
+<section><h2>Pareto front: точность направления / мощность / вертикаль</h2>
+<p>5000 геометрий и режимов. Недоминируемые решения ищутся одновременно по трём целям: <b>σ азимута ↓, σ вертикали ↓, мощность трёх осей ↓</b>. Дополнительный фильтр — наружный габарит трёхосевого блока до 90 мм. Точки интерактивны.</p>
+<svg id="paretoSvg" class="chart" viewBox="0 0 900 330" role="img" aria-label="График решений Pareto по ошибке азимута и мощности, цвет задает вертикальную ошибку"></svg>
+<div class="legend"><span><span class="dot" style="background:#45627e"></span>Допустимые конфигурации</span><span><span class="dot" style="background:#65d8b0"></span>Недоминируемый фронт</span><span><span class="dot" style="background:#ffd16b"></span>Выбранная конфигурация</span></div><div class="detail" id="paretoStat"></div></section>
+<section><h2>Физические зависимости, заложенные в расчёт</h2>
+<table><thead><tr><th>Узел</th><th>Модель</th><th>Ограничение</th></tr></thead><tbody>
+<tr><td>Намагничивание</td><td><code>Hexc ≈ Nexc Ipk / Lexc</code>; проверка Hexc/Hk</td><td>Hk, Bs и частотные потери должны быть измерены у партии ленты</td></tr>
+<tr><td>Размагничивание</td><td><code>μapp = μr / [1 + D(μr − 1)]</code></td><td>D оценён эллипсоидным приближением открытой полоски; нужен FEM</td></tr>
+<tr><td>Индукция 2f</td><td><code>|dV₂/dB| = 4πf · (2Npickup Acore) · |μ₂|</code></td><td>Квазистатическая симметричная модель; не заменяет измеренную петлю B–H</td></tr>
+<tr><td>Омические потери</td><td><code>R = ρCu Lwire / Awire</code>; <code>Pexc = 2I²rms R</code></td><td>Скин-эффект, динамический гистерезис и паразитная ёмкость отдельно не идентифицированы</td></tr>
+<tr><td>Азимут</td><td><code>H = B cos(i)</code>; <code>σD ≈ σ⊥/H</code> (радиан)</td><td>При слабом H ошибка быстро возрастает; нужен уровень/инклинометр</td></tr>
+<tr><td>Вертикаль</td><td><code>σZ² ≈ σsensor² + σoffset² + [H·σtilt]² + [H·σorth]²</code></td><td>Вертикаль в координатах Земли — только после определения ориентации</td></tr>
+</tbody></table>
+<h3>Вторая гармоника проницаемости</h3><svg id="harmonic" class="chart" viewBox="0 0 900 200" style="height:200px"></svg>
+<p class="controlsnote">Симметричная пара сердечников: возбуждение противоположно, общая обмотка снимает модуляцию потока. Фурье-компонента μ₂ находится численно; шум материала задаётся диапазоном сценария, не выводится из этой кривой.</p>
+</section>
+<section><h2>Публикации и профессиональные ориентиры</h2><p>Публикации 2022–2026 гг., отдельно от базовой монографии. Нельзя механически переносить pT/√Hz между параллельной двухстержневой и ортогональной проволочной топологиями.</p><div id="sources" class="sources"></div>
+<p class="foot">Монография: P. Ripka, <i>Magnetic Sensors and Magnetometers</i>, 2nd ed., Artech House, 2021; главы 3.2.2, 3.3.1, 3.4, 3.5, 3.9, 3.14. Проверенные ориентиры: 5 пТ/√Гц при 1 Гц (параллельная аморфная проволока, Dyer 2024); 4–5 пТ/√Гц (racetrack из Cu-permalloy, Narod & Miles 2024); 1,1 нТ/√Гц (самодельная трёхосевая головка, Can et al. 2025). Все — разные конструкции и условия.</p>
+</section>
+</div></main>
+<script>
+'use strict';
+const $=id=>document.getElementById(id), pi=Math.PI, mu0=4*pi*1e-7;
+const mats={
+ni:{name:'Ni80Fe20',bs:.75,mur:35000,hk:120,rho:.50e-6,baseNoise:36,drift:.12,kind:'foil'},
+mo:{name:'1J85/NiFeMo',bs:.65,mur:80000,hk:85,rho:.56e-6,baseNoise:27,drift:.09,kind:'foil'},
+co:{name:'CoFeSiB',bs:.58,mur:23000,hk:100,rho:1.2e-6,baseNoise:24,drift:.25,kind:'wire'}};
+const defs=[
+['length','Длина сердечников','мм',25,70,1,45],['width','Ширина полоски / Ø проволоки','мм',.12,3,.04,2],
+['foil','Толщина ленты','мм',.025,.10,.025,.05],['layers','Количество слоёв','',1,4,1,2],
+['gap','Межосевой шаг сердечников','мм',3,12,.5,6],['ns','Витки pickup','',500,2400,100,1600],
+['nexc','Витки возбуждения / стержень','',100,420,10,250],['nc','Витки компенсации','',150,800,25,500],
+['wires','Провод pickup','мм',.08,.25,.01,.12],['wiree','Провод возбуждения','мм',.16,.35,.01,.22],
+['freq','Частота возбуждения','кГц',4,35,1,12],['ipeak','Пиковый ток возбуждения','мА',15,100,1,45],
+['avg','Усреднение','с',1,120,1,10],['incl','Геомагнитное наклонение','°',0,85,1,65],
+['tilt','Остаточная ошибка наклона','°',.005,.4,.005,.05],
+['orth','Неортогональность после коррекции','°',.005,.3,.005,.03],
+['offset','Остаточный нуль после калибровки','нТ',.05,8,.05,.6],
+['temp','Отклонение температуры после коррекции','°C',0,20,.5,3],
+['stations','Измерительных блоков','',1,2,1,2]
+];
+const settings={}, s=(k)=>Number(settings[k]), fmt=(v,n=2)=>Number(v).toLocaleString('ru-RU',{maximumFractionDigits:n,minimumFractionDigits:0});
+for(const d of defs){
+ let label=document.createElement('label');label.className='control';let head=document.createElement('div'),span=document.createElement('span'),out=document.createElement('output');
+ span.textContent=d[1];out.id='out_'+d[0];head.append(span,out);
+ let inp=document.createElement('input');inp.id=d[0];inp.type='range';inp.min=d[3];inp.max=d[4];inp.step=d[5];inp.value=d[6];settings[d[0]]=d[6];
+ inp.addEventListener('input',()=>{settings[d[0]]=+inp.value;render(false)});
+ label.append(head,inp);$('sliders').append(label);
+}
+$('mat').addEventListener('change',()=>{if($('mat').value==='co'){set('width',.16);set('layers',1)}else if(s('width')<.3){set('width',2)}render(true)});
+function set(k,v){const d=defs.find(q=>q[0]===k);settings[k]=Math.max(d[3],Math.min(d[4],v));$(k).value=settings[k]}
+function get(){return Object.assign({mat:$('mat').value},settings)}
+function muMod(H,muR,hk){return 1+(muR-1)/(1+Math.pow(Math.abs(H)/hk,4))}
+function simulation(p){
+ const m=mats[p.mat], L=p.length*.001, isWire=m.kind==='wire';
+ const A=isWire?pi*Math.pow(p.width*.0005,2):p.width*p.foil*p.layers*1e-6;
+ const re=Math.sqrt(A/pi), shape= Math.max(.00001,Math.pow(re/L,2)*(Math.log(Math.max(2.1,2*L/re))-1));
+ const muApp=(u)=>u/(1+shape*(u-1));
+ const Hexc=p.nexc*(p.ipeak*.001)/Math.max(.005,L*.86), drive=Hexc/m.hk;
+ const M=128;let coeff=0, rmsMu=0;const wave=[];
+ for(let i=0;i<M;i++){let t=2*pi*i/M;let u=muApp(muMod(Hexc*Math.sin(t),m.mur,m.hk));coeff+=u*Math.cos(2*t);rmsMu+=u;wave.push(u)}
+ coeff=2*coeff/M;rmsMu/=M;
+ const S=Math.abs((4*pi*p.freq*1000)*(2*p.ns*A)*coeff);
+ const wireR=(mm)=>1.724e-8/(pi*Math.pow(mm*.0005,2));
+ const headRadius=p.gap*.0005 + (isWire? p.width*.0005 : p.width*.0005)+.0008;
+ const pickupLayers=Math.ceil(p.ns/Math.max(1,L/(p.wires*.001*1.12)));
+ const pickupRadius=headRadius+pickupLayers*p.wires*.001*.57;
+ const Rpickup=p.ns*2*pi*pickupRadius*wireR(p.wires)*1.12;
+ const Rexc=p.nexc*2*pi*(re+.0007+p.wiree*.0005)*wireR(p.wiree)*1.2;
+ const Pcopper=2*.5*Math.pow(p.ipeak*.001,2)*Rexc*1000; // 2 rods, sinusoidal current
+ const Pcore=2*(.55+(.00025*p.freq*1000)*A/2e-7)*(p.freq/12)*(Math.max(.3,Math.min(5,drive))/2);
+ const Paxis=9+Pcopper/Math.max(.20,.70)+Pcore+3; // front-end, driver losses, compensation control
+ const P3=Paxis*3*p.stations;
+ const fullness=p.ns*p.wires*.001/(L*.86), outerD=(pickupRadius+p.wires*.001)*2000+4;
+ const pack=Math.max(p.length+12,outerD*2.9+12);
+ // literature-anchored but unvalidated base noise, with geometry & drive penalties
+ const coreFactor=Math.sqrt((45/p.length)*(2e-7/Math.max(1e-9,A)));
+ const drivePenalty=1+.33*Math.pow(Math.log(Math.max(.2,drive)/2.6),2);
+ const hfPenalty=1+.16*Math.pow(Math.max(0,p.freq-17)/18,2);
+ const Ncore=m.baseNoise*coreFactor*drivePenalty*hfPenalty*Math.sqrt(12/p.freq);
+ const Nthermal=Math.sqrt(4*1.380649e-23*293*Rpickup+Math.pow(2.5e-9,2))/Math.max(.0000001,S)*1e12;
+ const Nasd=Math.sqrt(Ncore*Ncore+Nthermal*Nthermal);
+ const sigmaNoise=Nasd/1000/Math.sqrt(2*Math.max(1,p.avg)); // nT from pT/sqrtHz
+ const B=50000, inc=p.incl*pi/180, H=Math.max(1,B*Math.cos(inc)), Z=B*Math.sin(inc);
+ const sigmaOff=Math.hypot(p.offset,m.drift*p.temp); // nT
+ const geomCross=(.007+ .05*(3/p.gap))*pi/180;
+ const orth=Math.hypot(p.orth*pi/180,geomCross);
+ const tilt=p.tilt*pi/180;
+ const horizErr=Math.hypot(sigmaNoise,sigmaOff, Z*orth,Z*tilt);
+ const vertErr=Math.hypot(sigmaNoise,sigmaOff,H*orth,H*tilt);
+ const sigmaD=180/pi*horizErr/H;
+ const inclinationErr=180/pi*Math.sqrt(Math.pow(H*vertErr,2)+Math.pow(Z*horizErr,2))/Math.pow(B,2);
+ return {A,muApp:muApp(m.mur),D:shape,drive,S,Rpickup,Rexc,Pcopper,Paxis,P3,outerD,pack,fill:fullness,noise:Nasd,Ncore,Nthermal,sigmaNoise,sigmaOff,horizErr,vertErr,sigmaD,inclinationErr,H,Z,coeff,aveMu:rmsMu,wave,foilWidth:p.width,geometry:p};
+}
+function guarded(o){return Number.isFinite(o.sigmaD)&&o.drive>=1.15&&o.drive<=8&&o.fill<=9&&o.pack<=90&&o.P3<=500&&o.S>10}
+function details(r){
+$('noise').textContent=fmt(r.noise,1);$('heading').textContent=fmt(r.sigmaD,4)+'°';$('vertical').textContent=fmt(r.vertErr,2)+' нТ';$('power').textContent=fmt(r.Paxis*3,1)+' / '+fmt(r.Paxis*6,1);
+let a=[
+['Габарит блока, инженерная оценка',fmt(r.pack,1)+' мм'],
+['Сечение одного сердечника',fmt(r.A*1e6,3)+' мм²'],
+['Кажущаяся проницаемость μapp',fmt(r.muApp,0)],
+['Коэффициент размагничивания D',r.D.toExponential(2)],
+['H возбуждения / Hk',fmt(r.drive,2)],
+['Крутизна 2f (открытый контур)',fmt(r.S/1e6,2)+' мВ/нТ'],
+['R pickup / обм. возбуждения',fmt(r.Rpickup,1)+' / '+fmt(r.Rexc,1)+' Ω'],
+['Омические потери возбуждения / ось',fmt(r.Pcopper,2)+' мВт'],
+['Мощность 1 оси / 3 осей',fmt(r.Paxis,1)+' / '+fmt(r.Paxis*3,1)+' мВт'],
+['Энергия всех головок за 30 суток',fmt(r.P3*.72,1)+' Вт·ч'],
+['Витков pickup по длине в слоях',fmt(r.fill,2)+' усл. слоя'],
+['Экв. шум электроники / магнитного материала',fmt(r.Nthermal,1)+' / '+fmt(r.Ncore,1)+' пТ/√Гц'],
+['Допуск расчёта',guarded(r)?'В границах поисковой модели':'Выход за ограничения']
+];
+$('detail').innerHTML=a.map(e=>'<div><span>'+e[0]+'</span><strong>'+e[1]+'</strong></div>').join('');
+$('angles').innerHTML=[
+['Горизонтальное поле H',fmt(r.H/1000,2)+' мкТл'],
+['Вертикальное поле Z',fmt(r.Z/1000,2)+' мкТл'],
+['СКО случайного сигнала за окно',fmt(r.sigmaNoise*1000,2)+' пТ'],
+['Остаточный нуль с температурой',fmt(r.sigmaOff,2)+' нТ'],
+['Оценка ошибки инклинации',fmt(r.inclinationErr,4)+'°']
+].map(e=>'<div><span>'+e[0]+'</span><strong>'+e[1]+'</strong></div>').join('');
+}
+let yaw=.42,pitch=-.45;
+function project([x,y,z]){let c=Math.cos(yaw),s=Math.sin(yaw),u=c*x-s*y,v=s*x+c*y;let d=Math.cos(pitch),e=Math.sin(pitch);return [340+3.1*u,168+3.1*(d*z-e*v)]}
+function line(a,b,color,w=2,opacity=1){let p=project(a),q=project(b);return '<line x1="'+p[0]+'" y1="'+p[1]+'" x2="'+q[0]+'" y2="'+q[1]+'" stroke="'+color+'" stroke-width="'+w+'" stroke-opacity="'+opacity+'" stroke-linecap="round"/>'}
+function geom(p){
+ let res='<defs><linearGradient id="core" x1="0" x2="1"><stop stop-color="#b77b49"/><stop offset=".5" stop-color="#ffdc9a"/><stop offset="1" stop-color="#a86b45"/></linearGradient></defs>';
+ const axis=[[1,0,0],[0,1,0],[0,0,1]], origins=[[0,-10,-10],[10,0,10],[-10,10,0]],color=['#6db7ff','#a5e3b7','#dfb3f8'];
+ function add(a,b){return a.map((v,i)=>v+b[i])}
+ function scale(v,k){return v.map(t=>t*k)}
+ function ring(center,ax,rad,col,width){let basis=ax[2]?[1,0,0]:[0,0,1],basis2=ax[0]?[0,1,0]:ax[1]?[1,0,0]:[0,1,0];let last=null,out='';for(let j=0;j<=20;j++){let ang=2*pi*j/20,point=add(center,add(scale(basis,rad*Math.cos(ang)),scale(basis2,rad*Math.sin(ang))));if(last)out+=line(last,point,col,width,.75);last=point}return out}
+ for(let k=0;k<3;k++){
+  let ax=axis[k], ctr=origins[k], L=p.length/2.6, distance=p.gap/2.2;
+  let norm=ax[2]?[1,0,0]:[0,0,1], nside= ax[0]?[0,1,0]:ax[1]?[1,0,0]:[0,1,0];
+  for(let sign of [-1,1]){let o=add(ctr,scale(norm,distance*sign));
+   res+=line(add(o,scale(ax,-L)),add(o,scale(ax,L)),'url(#core)',5,1);
+   for(let i=0;i<17;i++){let t=-L+2*L*(i+.5)/17;res+=ring(add(o,scale(ax,t)),ax,1.8,'#d6a9ef',.65)}
+  }
+  for(let i=0;i<26;i++){let t=-L+2*L*(i+.5)/26;res+=ring(add(ctr,scale(ax,t)),ax,distance+3,'#79c9f8',.66)}
+  for(let i=0;i<8;i++){let t=-L+2*L*(i+.5)/8;res+=ring(add(ctr,scale(ax,t)),ax,distance+4.3,'#82dbb4',.85)}
+  res+=line(add(ctr,scale(ax,L+2)),add(ctr,scale(ax,L+7)),color[k],2);
+  const q=project(add(ctr,scale(ax,L+10)));res+='<text x="'+q[0]+'" y="'+q[1]+'" fill="'+color[k]+'" font-size="17" font-weight="700">'+['X','Y','Z'][k]+'</text>';
+ }
+ res+='<text x="15" y="28" fill="#91acc7" font-size="12">6 сердечников · три пары · противоположное возбуждение</text><text x="15" y="49" fill="#91acc7" font-size="12">pickup 2f · отдельная обратная связь · drag для вращения</text>';
+ $('geom3d').innerHTML=res;
+}
+let drag=null;const svg=$('geom3d');
+svg.addEventListener('pointerdown',e=>{drag=[e.clientX,e.clientY];svg.setPointerCapture(e.pointerId)});
+svg.addEventListener('pointermove',e=>{if(!drag)return;yaw+=(e.clientX-drag[0])*.012;pitch=Math.max(-1.5,Math.min(1.5,pitch+(e.clientY-drag[1])*.012));drag=[e.clientX,e.clientY];geom(get())});
+svg.addEventListener('pointerup',()=>drag=null);svg.addEventListener('pointercancel',()=>drag=null);
+function harmonic(r){let w=r.wave, max=Math.max(...w),min=Math.min(...w),amp=Math.max(1,max-min),path=w.map((v,i)=>(i?'L':'M')+(42+i*815/(w.length-1)).toFixed(1)+','+(170-132*(v-min)/amp).toFixed(1)).join(' ');
+$('harmonic').innerHTML='<line x1="42" y1="170" x2="860" y2="170" stroke="#698097"/><path d="'+path+'" stroke="#64d8dd" stroke-width="2" fill="none"/><text x="48" y="25" fill="#e6f3ff">μapp(t), один период f; модуляция 2f</text><text x="48" y="188" fill="#91a8bf">0</text><text x="846" y="188" fill="#91a8bf">2π</text><text x="800" y="33" fill="#a5e7c8">μ₂ = '+fmt(Math.abs(r.coeff),0)+'</text>';
+}
+const base={};for(const x of defs)base[x[0]]=x[6];let candidates=[],front=[],selected=null;
+let rng=918732;function rand(){rng=(1664525*rng+1013904223)>>>0;return rng/4294967296}function between(lo,hi){return lo+rand()*(hi-lo)}
+function optimize(){
+rng=918732;candidates=[];const fixed=get(), materials=['ni','mo','co'];
+for(let i=0;i<5000;i++){
+let p=Object.assign({},fixed);
+p.mat=materials[Math.floor(rand()*3)];
+p.length=Math.round(between(30,65));p.width=p.mat==='co'?between(.12,.2):between(1,3);
+p.layers=p.mat==='co'?1:1+Math.floor(rand()*4);p.gap=between(4,10);
+p.ns=100*Math.round(between(7,24));p.nexc=10*Math.round(between(14,40));p.nc=25*Math.round(between(12,28));
+p.wires=between(.1,.18);p.wiree=between(.18,.3);p.freq=Math.round(between(7,25));p.ipeak=Math.round(between(22,80));
+const r=simulation(p);if(guarded(r))candidates.push({p,r,front:false});
+}
+const arr=candidates.slice().sort((a,b)=>a.r.sigmaD-b.r.sigmaD);
+front=[];for(const v of arr){let dominated=false;for(const f of front){if(f.r.vertErr<=v.r.vertErr&&f.r.P3<=v.r.P3&&f.r.sigmaD<=v.r.sigmaD){dominated=true;break}}
+if(!dominated){v.front=true;front=front.filter(f=>!(v.r.vertErr<=f.r.vertErr&&v.r.P3<=f.r.P3&&v.r.sigmaD<=f.r.sigmaD));front.push(v)}}
+plot();
+}
+function plot(){
+const svg=$('paretoSvg');let all=candidates;if(!all.length){svg.innerHTML='<text x="30" y="65" fill="#e8ca91">Нет допустимых геометрий</text>';return}
+let minX=Math.min(...all.map(o=>o.r.sigmaD)),maxX=Math.max(...all.map(o=>o.r.sigmaD));let minY=Math.min(...all.map(o=>o.r.P3)),maxY=Math.max(...all.map(o=>o.r.P3));
+minX=Math.max(0,minX*.95);maxX*=1.04;minY*=.94;maxY*=1.06;
+function px(x){return 56+818*(x-minX)/(maxX-minX)}function py(y){return 282-239*(y-minY)/(maxY-minY)}
+let v='<rect x="55" y="42" width="820" height="240" rx="5" fill="#122239" stroke="#3b526a"/>';
+for(let i=0;i<=4;i++){let x=55+i*820/4,y=282-i*239/4;v+='<line x1="'+x+'" y1="42" x2="'+x+'" y2="282" stroke="#273c52"/><line x1="55" y1="'+y+'" x2="875" y2="'+y+'" stroke="#273c52"/><text x="'+x+'" y="300" font-size="11" text-anchor="middle" fill="#90a8c1">'+fmt(minX+i*(maxX-minX)/4,3)+'</text><text x="48" y="'+(y+4)+'" text-anchor="end" font-size="11" fill="#90a8c1">'+fmt(minY+i*(maxY-minY)/4,0)+'</text>'}
+v+='<text x="445" y="323" text-anchor="middle" font-size="12" fill="#b6d1e7">СКО направления / ° (меньше — лучше)</text><text x="14" y="34" font-size="11" fill="#b6d1e7">Мощность, мВт</text>';
+const subset=all.filter((_,i)=>i%2===0);for(const a of subset){v+='<circle cx="'+px(a.r.sigmaD)+'" cy="'+py(a.r.P3)+'" r="1.5" fill="#51728f" opacity=".45"/>'}
+front.forEach((o,i)=>{v+='<circle data-front="'+i+'" cx="'+px(o.r.sigmaD)+'" cy="'+py(o.r.P3)+'" r="4.5" fill="#61d9b1" stroke="#203940" stroke-width="1"><title>Азимут '+fmt(o.r.sigmaD,4)+'°; Z '+fmt(o.r.vertErr,3)+' нТ; '+fmt(o.r.P3,1)+' мВт</title></circle>'});
+let chosen=selected||simulation(get()),q=selected?selected.r:chosen;
+v+='<circle cx="'+px(q.sigmaD)+'" cy="'+py(q.P3)+'" r="6.4" fill="#ffd16b" stroke="#fff1be" stroke-width="1.3"/>';svg.innerHTML=v;
+svg.querySelectorAll('[data-front]').forEach(node=>node.addEventListener('click',()=>{const o=front[+node.dataset.front];$('mat').value=o.p.mat;for(const d of defs){if(o.p[d[0]]!==undefined)set(d[0],o.p[d[0]])}selected=o;render(false)}));
+$('paretoStat').innerHTML='<div><span>Рассчитано допустимых / недоминируемых</span><strong>'+all.length+' / '+front.length+'</strong></div><div><span>Цели</span><strong>σD, σZ, P3 (все минимизируются)</strong></div><div><span>Выбранная / ближайшая конструкция</span><strong>'+fmt(q.sigmaD,4)+'°; '+fmt(q.vertErr,2)+' нТ; '+fmt(q.P3,1)+' мВт</strong></div>';
+}
+function render(reopt){const p=get(),r=simulation(p);defs.forEach(d=>{$('out_'+d[0]).textContent=fmt(p[d[0]],d[0]==='tilt'||d[0]==='orth'?3:2)+' '+d[2]});details(r);harmonic(r);geom(p);selected=null;if(reopt)optimize();else plot()}
+$('reset').onclick=()=>{for(const d of defs)set(d[0],base[d[0]]);$('mat').value='ni';render(true)};
+$('optimize').onclick=()=>render(true);
+const refs=[
+['2024','Dyer, Griffin, Riis','Parallel-rod single-board: 5 пТ/√Гц, 40 мВт','10.1063/5.0175418'],
+['2024','Narod & Miles','Cu-permalloy, 4–5 пТ/√Гц, racetrack','10.5194/gi-13-131-2024'],
+['2022','Greene et al.','Tesseract, симметрия трёх осей, Merritt feedback','10.5194/gi-11-307-2022'],
+['2022','Miles et al.','Толщина ленты 50/100 мкм, термообработка','10.5194/gi-11-111-2022'],
+['2024','Hu et al.','Ошибки ориентации и калибровка XYZ','10.5194/gi-13-301-2024'],
+['2025','Can et al.','Самодельный XYZ: 1.1 нТ/√Гц, проверка ошибок','10.3390/s25133971'],
+['2025','Yan et al.','Трёхосевой CoFeSiB, 175 °C, 300 Гц','10.3390/s25195972'],
+['2024','Cu-doped CoFeSiB','U-стержень 40 мм, pickup 400 витков / 30 мм','10.3390/s24010309'],
+['2024','Pu et al.','Cu@Fe20Ni80, U-wire, электролитический слой','10.1016/j.jmmm.2024.171822'],
+['2025','Pu et al.','Градиентные FeNi слои, 21 пТ/√Гц','10.1016/j.sna.2025.116899'],
+['2026','Bryakin et al.','Новый системный обзор феррозондовой конструкции','10.3390/electronicmat7040027'],
+['2026','Mu et al.','Динамика намагничивания, 20 пТ/√Гц','10.1002/rar2.70472'],
+['2026','Grimmich et al.','Трёхосевая матричная калибровка и ежедневное обновление','10.1029/2026JA035236'],
+['2026','CoFeSiB tensile stress','Режим возбуждения, нелинейная зависимость шума','10.1016/j.jmmm.2026.174103'],
+['2026','CoP/Ag closed-loop','8 пТ/√Гц, другой — ортогональный — принцип','10.1007/s40820-026-02317-2']
+];
+$('sources').innerHTML=refs.map(x=>'<div class="source"><small>'+x[0]+' · DOI</small><b>'+x[1]+'</b><small>'+x[2]+'</small><a target="_blank" rel="noopener" href="https://doi.org/'+x[3]+'">'+x[3]+'</a></div>').join('');
+render(true);
+</script>
+</body></html>
