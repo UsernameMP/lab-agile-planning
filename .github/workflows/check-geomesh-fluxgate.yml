@@ -1,0 +1,36 @@
+name: Check GeoMesh fluxgate model
+
+on:
+  pull_request:
+    paths:
+      - 'geomesh/fluxgate*'
+      - 'geomesh/tests/**'
+      - '.github/workflows/check-geomesh-fluxgate.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'geomesh/fluxgate*'
+      - 'geomesh/tests/**'
+      - '.github/workflows/check-geomesh-fluxgate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test fluxgate physics and 3-objective Pareto
+        run: node --test geomesh/tests/fluxgate-model.test.cjs
+      - name: Validate Pages asset integrity
+        run: |
+          test -s geomesh/fluxgate.html
+          test -s geomesh/fluxgate-model.js
+          grep -q 'fluxgate-model.js' geomesh/fluxgate.html
+          test -s geomesh/overhauser.html
+          test -s geomesh/index.html
