@@ -116,7 +116,8 @@
     const thermal24=m.temp*FIXED.tempResidualK*
       (1+.09*Math.abs(p.driveRatio/2.7-1)+.06*Math.max(0,(6-p.spacingMm)/2));
     const gain24=(FIXED.compensationTestT*1e9)*FIXED.gainDriftPpmPerK*1e-6*FIXED.tempResidualK;
-    const drift24=Math.hypot(aging24,thermal24,gain24);
+    const drift24=Math.hypot(aging24,thermal24); // baseline drift only: gain contributes to reading, not to zero
+    const readingDrift24=Math.hypot(drift24,gain24);
     const pass=(
       p.driveRatio>=1.6 && p.driveRatio<=4.4 && Ipeak<=.17 && excitationTurns<=400 &&
       pickupLayers<=FIXED.maxPickupLayers && outerDiameterMm<=FIXED.maxOuterDiameterMm &&
@@ -136,7 +137,7 @@
       pickupWireMm,pickupR,pickupLayers,pickupAxialTurns:axialTurns,pickupRadiusMm,
       feedbackTurns,feedbackR,feedbackIatBtest,feedbackCopperMw,
       sensitivityVperT,magneticAsd1,electronicAsd1,asd1,
-      aging24,thermal24,gain24,drift24,coreLossMw,powerMw,outerDiameterMm,pass,flags,wave};
+      aging24,thermal24,gain24,drift24,readingDrift24,coreLossMw,powerMw,outerDiameterMm,pass,flags,wave};
   }
   function dominates(a,b){
     // weakly no worse in each criterion, strictly better in at least one.
